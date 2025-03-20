@@ -1,0 +1,22 @@
+import example.*
+import pokemones.*
+
+describe "entrenando pokemones"{
+	test "Red agrega pokemones al equipo y conocemos el poderio total de red" {
+
+	red.agregarPokemones(machop)
+	red.agregarPokemones(ratatta)
+	assert.equals(3500, red.poderioTotal())
+
+}
+/** probe en consola y funciona pero no se como hacerlo en test
+	test "red abandona a su pokemon menos poderoso"{
+		
+		red.agregarPokemones(machop)
+		red.agregarPokemones(ratatta)
+		red.abandonarPokemonMenosPoderoso()
+		assert.equals('machop',red.retornaPoke())
+		
+	}
+
+}	*/
