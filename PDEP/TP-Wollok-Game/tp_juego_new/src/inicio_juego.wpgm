@@ -1,0 +1,11 @@
+import wollok.game.*
+import juego.*
+import menues.*
+
+program metalLag {
+
+	juego.configurarVentana()
+	juego.mostrarMenuPrincipal()
+	game.start()
+
+}
