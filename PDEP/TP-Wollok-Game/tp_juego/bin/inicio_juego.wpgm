@@ -1,0 +1,17 @@
+import wollok.game.*
+import juego.*
+import menues.*
+
+program metalLag {
+
+	juego.configurarVentana()
+	juego.mostrarMenuPrincipal()
+	
+	//var nivel1 = new Mapa()
+	//game.addVisual(nivel1)
+	//nivel1.limitarMapa()
+	// game.whenCollideDo(soldado,{elemento => soldado.quedateQuieto()})  
+	
+	game.start()
+
+}
