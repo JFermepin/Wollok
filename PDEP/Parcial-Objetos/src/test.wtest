@@ -1,0 +1,65 @@
+import main.*
+import entidades.*
+
+test "El bot seleccionador selecciona la casa para cada estudiante" {
+
+	botSeleccionador.determinarCasa(harryBotter)
+	botSeleccionador.determinarCasa(dracoBotfoy)
+	botSeleccionador.determinarCasa(ronBotsley)
+	botSeleccionador.determinarCasa(hermioneBotnger)
+	botSeleccionador.determinarCasa(ginnyBotsley)
+	
+	assert.that(harryBotter.casa() == gryffindor)
+	assert.that(dracoBotfoy.casa() == slytherin)
+	assert.that(ronBotsley.casa() == ravenclaw)
+	assert.that(hermioneBotnger.casa() == hufflepuff)
+	assert.that(ginnyBotsley.casa() == gryffindor)
+
+}
+
+test "Harry Botter no sabe nada, hasta que asiste a la clase de Botnape y aprende el hechizo Inmobilus" {
+
+	assert.that(harryBotter.hechizosAprendidos().isEmpty())
+	
+	harryBotter.asistirAMateria(materiaUno)
+	
+	assert.that(harryBotter.hechizosAprendidos().contains(inmobilus))
+
+}
+
+test "Harry Botter aprende el hechizo Olvidus, y se lo aplica a Ron como broma, haciendo que olvide su ultimo hechizo aprendido" {
+
+	assert.that(harryBotter.hechizosAprendidos().isEmpty())
+	
+	ronBotsley.hechizosAprendidos([inmobilus, sectumSempra, avadakedabra])
+	harryBotter.lanzarHechizo(olvidus, ronBotsley)
+	
+	assert.that(ronBotsley.hechizosAprendidos().contains(avadakedabra)) //Como harry no conocia el hechizo, no le hace nada
+	
+	harryBotter.asistirAMateria(materiaDos)
+	harryBotter.lanzarHechizo(olvidus, ronBotsley)
+	
+	assert.that(!ronBotsley.hechizosAprendidos().contains(avadakedabra))
+	
+
+}
+
+
+test "Todos los integrantes de la casa Gryffindor le lanzan el ultimo hechizo a Voldemort" {
+
+	harryBotter.hechizosAprendidos([inmobilus, sectumSempra, avadakedabra, olvidus])
+	ronBotsley.hechizosAprendidos([inmobilus, avadakedabra, olvidus, sectumSempra])
+	hermioneBotnger.hechizosAprendidos([sectumSempra, avadakedabra, olvidus, inmobilus])
+	
+	ronBotsley.esExperimentado()
+	assert.that(ronBotsley.experimentado())
+	
+	const botdemort = new BotProfesor(materiasDictadas = 0, cargaElectrica = 200, aceite = "Puro", hechizosAprendidos = [avadakedabra])
+	
+	[harryBotter,ronBotsley,hermioneBotnger].forEach({estudiante => estudiante.lanzarHechizo(estudiante.hechizosAprendidos().last(),botdemort)})
+	
+	assert.that(botdemort.hechizosAprendidos().isEmpty())
+	assert.that(botdemort.aceite() == "Sucio")
+	assert.that(botdemort.cargaElectrica() == 200) //No le resta por ser un "Profesor"
+	
+}

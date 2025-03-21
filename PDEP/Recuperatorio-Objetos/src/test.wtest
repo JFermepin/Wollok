@@ -1,0 +1,59 @@
+import productos.*
+import pattiserie.*
+import clientes.*
+
+test "Distintas mesas dulces con distintos componentes" {
+	
+	const porcionDeTorta1 = new PorcionDeTorta(ingrediente = "Chocolate", peso = 100, tipo = "Pastafrola")
+	const porcionDeTorta2 = new PorcionDeTorta(ingrediente = "Crema", peso = 80, tipo = "Torta Fraiser")
+	const alfajor1 = new Alfajor(pesoTapa = 30, relleno = miel)
+	const macaron1 = new Macaron(peso = 60, tieneCobertura = false)
+	
+	const mesaDulce1 = new MesaDulce(componentes = [porcionDeTorta1, porcionDeTorta2, alfajor1, macaron1])
+
+	//Peso = sumatoria de todos los componentes
+	assert.that(mesaDulce1.peso() == porcionDeTorta1.peso() + porcionDeTorta2.peso() + alfajor1.peso() + macaron1.peso())
+
+	//La mesa dulce es natural 
+	assert.that(mesaDulce1.esNatural())
+	
+	const alfajor2 = new Alfajor(pesoTapa = 40, relleno = dulceDeLeche) //Agregamos un alfajor no-natural
+	mesaDulce1.componentes().add(alfajor2)
+	
+	//La mesa dulce deja de ser natural
+	assert.that(!mesaDulce1.esNatural())
+	
+	//La mayor valoracion (100)
+	assert.that(mesaDulce1.valoracion() == porcionDeTorta1.valoracion())
+}
+
+test "Un cliente compra un producto que le gusta en la pattiserie" {
+	
+	const porcionDeTorta = new PorcionDeTorta(ingrediente = "Chocolate", peso = 100, tipo = "Pastafrola")
+	const alfajor = new Alfajor(pesoTapa = 30, relleno = miel)
+	const macaron = new Macaron(peso = 60, tieneCobertura = false)
+	
+	pattiserie.platosALaVenta().add(porcionDeTorta)
+	pattiserie.platosALaVenta().add(alfajor)
+	pattiserie.platosALaVenta().add(macaron)
+
+	const cliente1 = new ClienteNaturista(credito = 4000)
+	
+	//Al cliente le gustan los productos naturales, la torta es el primero que aparece, por ende compra la torta
+	cliente1.comprarProducto()
+	 
+	assert.that(cliente1.credito() == 880)
+	assert.that(pattiserie.platosALaVenta().head() == alfajor)
+}
+
+test "Un cliente no le alcanza para comprar un producto que le gusta en la pattiserie" {
+	
+	const porcionDeTorta = new PorcionDeTorta(ingrediente = "Chocolate", peso = 100, tipo = "Pastafrola")
+	
+	pattiserie.platosALaVenta().add(porcionDeTorta)
+
+	const cliente1 = new ClienteNaturista(credito = 3000)
+	
+	//Al cliente le gustan los productos naturales, la torta es el primero que aparece, pero no le alcanza el dinero
+	assert.throwsException({ cliente1.comprarProducto() })
+}
